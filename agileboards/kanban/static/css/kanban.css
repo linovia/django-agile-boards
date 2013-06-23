@@ -1,0 +1,13 @@
+.task .progress {
+    height: 10px;
+}
+
+.task .progress .bar {
+
+}
+
+.dotted {
+    border-top: 1px dashed #dddddd;
+    border-bottom: 1px dashed #e3e3e3;
+    margin: 2px 0px;
+}
