@@ -112,54 +112,8 @@
       </table>
       {% endverbatim %}
 
-      {% comment %}
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Todo</th>
-            <th>Ongoing</th>
-            <th>Done</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="sortable">
-              <div class="task well">
-                <span>Item 1</span>
-                <hr class="dotted">
-                <span>Resp 1</span>
-                <div class="progress">
-                  <div class="bar" style="width: 60%;"></div>
-                </div>
-              </div>
-            </td>
-            <td class="sortable">
-              <div class="task well">
-                <span>Item 1</span>
-                <hr class="dotted">
-                <span>Resp 1</span>
-                <div class="progress">
-                  <div class="bar" style="width: 60%;"></div>
-                </div>
-              </div>
-            </td>
-            <td class="sortable">
-              <div class="task well">
-                <span>Item 1</span>
-                <hr class="dotted">
-                <span>Resp 1</span>
-                <div class="progress">
-                  <div class="bar" style="width: 60%;"></div>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      {% endcomment %}
-
       <footer>
-        <p>&copy; Linovia 2013</p>
+        <p>&copy; Linovia 2013 - {% now "Y" %}</p>
       </footer>
 
     </div> <!-- /container -->
@@ -168,33 +122,52 @@
     <script src="{% static 'js/jquery-ui-1.10.3.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/angular-1.0.7.js' %}"></script>
+    <script src="{% static 'js/angular-resource-1.0.7.js' %}"></script>
     <script src="{% static 'js/angularui-0.4.0.js' %}"></script>
     <script src="{% static 'js/multiSortable-0.0.2.js' %}"></script>
+    <script src="{% static 'js/angular-django-rest-resource.js' %}"></script>
 
     <script type="text/javascript">
       (function(){
 
         angular.module('ui.config', []).value('ui.config', {
           sortable: {
-            connectWith: '.task-column',
-            update: 'itemsChanged',
+            //update: 'itemsChanged',
+            connectWith: '.task-column'
           }
         });
 
-        this.taskboard = angular.module('taskboard', ['ui']);
+        this.taskboard = angular.module('taskboard', ['ui', 'ngResource', 'djangoRESTResources'])
+          .factory('Ticket', function($resource){
+          return $resource('/kanban/tickets/:ticketId', {}, {
+            query: {method:'GET', params:{}, isArray:true}
+          });
+        });
 
-        this.TaskController = function($scope) {
-          $scope.changed = 'Unfortunately not';
+        this.TaskController = function($scope, djResource, Ticket) {
+          // $scope.changed = 'Unfortunately not';
+          var tickets = djResource('/kanban/tickets/:ticketId/', {ticketId:'@id'});
+
+          /*
+          console.log(Ticket.query());t
+          t = Ticket.query({ticketId: 1});
+          console.log(t);
+          */
+          t = tickets.query();
+          console.log(t);
+          console.log(tickets.get({ticketId: 1}));
+          console.log('>>', t);
+          //*/
 
           $scope.board = {
             columns: [
               { name: 'todo',
-                items: [
-                  {name: 'todo 1'},
-                  {name: 'todo 2'},
-                  {name: 'todo 3'},
-                  {name: 'todo 4'}
-                ]
+                items: t //[
+                  // {name: 'todo 1'},
+                  // {name: 'todo 2'},
+                  // {name: 'todo 3'},
+                  // {name: 'todo 4'}
+                //]
               },
               { name: 'ongoing',
                 items: [
@@ -208,42 +181,16 @@
             ]
           };
 
+          /*
           $scope.itemsChanged = function() {
             $scope.changed = 'Yes, of course :)';
           }
+          */
 
         };
 
       }).call(this);
     </script>
 
-    {% comment %}
-    <script>
-    $(function() {
-      $( ".sortable" ).sortable({
-        connectWith: ".sortable",
-        revert: true,
-        // dropOnEmpty: true,
-        forcePlaceHolderSize: true,
-        helper: 'clone',
-        forceHelperSize: true,
-        receive: function(event, ui) {
-          // If WIP is too big, revert
-          // if new_wip > wip
-          // $(ui.sender).sortable('cancel');
-          console.log($(this));
-          console.log(ui.item);
-        }
-      });
-      /*
-      $( ".task" ).draggable({
-        // connectToSortable: ".sortable",
-        // helper: "clone",
-        revert: "invalid"
-      });
-      */
-    });
-    </script>
-    {% endcomment %}
   </body>
 </html>
