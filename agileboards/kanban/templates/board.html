@@ -110,6 +110,8 @@
           </tr>
         </tbody>
       </table>
+
+      {{ board.columns|json}}
       {% endverbatim %}
 
       <footer>
@@ -131,7 +133,6 @@
 
         angular.module('ui.config', []).value('ui.config', {
           sortable: {
-            //update: 'itemsChanged',
             connectWith: '.task-column'
           }
         });
@@ -139,41 +140,32 @@
         this.taskboard = angular.module('taskboard', ['ui', 'djangoRESTResources']);
 
         this.TaskController = function($scope, djResource) {
-          // $scope.changed = 'Unfortunately not';
           var tickets = djResource('/kanban/tickets/:ticketId/', {ticketId:'@id'});
-
-          t = tickets.query();
-          console.log(t);
-          console.log(tickets.get({ticketId: 1}));
-          console.log('>>', t);
 
           $scope.board = {
             columns: [
-              { name: 'todo',
-                items: t //[
-                  // {name: 'todo 1'},
-                  // {name: 'todo 2'},
-                  // {name: 'todo 3'},
-                  // {name: 'todo 4'}
-                //]
-              },
-              { name: 'ongoing',
-                items: [
-                  {name: 'done 1'},
-                  {name: 'done 2'}
+              {% for column in columns %}
+                {
+                  name: '{{ column }}',
+                  items: [
+                    {% for ticket in column.tickets.all %}
+                      {
+                        id: {{ticket.id}},
+                        name: '{{ ticket.name }}'
+                      },
+                    {% endfor %}
                 ]
-              },
-              { name: 'done',
-                items: []
-              }
+                },
+              {% endfor %}
             ]
           };
 
-          /*
-          $scope.itemsChanged = function() {
-            $scope.changed = 'Yes, of course :)';
+          var demo = function(newValue, oldValue, scope) {
+            console.log('demo');
+            console.log(oldValue, newValue);
           }
-          */
+
+          $scope.$watch('board', demo, true);
 
         };
 

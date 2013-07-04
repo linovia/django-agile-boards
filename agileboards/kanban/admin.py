@@ -1,3 +1,20 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Ticket, Column, Project
+
+
+class TicketAdmin(admin.ModelAdmin):
+    pass
+
+
+class ColumnAdmin(admin.ModelAdmin):
+    pass
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Ticket, TicketAdmin)
+admin.site.register(Column, ColumnAdmin)
+admin.site.register(Project, ProjectAdmin)
