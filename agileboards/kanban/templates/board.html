@@ -95,9 +95,9 @@
         </thead>
         <tbody>
           <tr>
-            <td class="task-column" ng-repeat="column in board.columns" ui-multi-sortable ng-model="board" model-subset="columns[{{ $index }}].items">
+            <td class="task-column" ng-repeat="column in board.columns" ui-multi-sortable ng-model="board" model-subset="columns[{{ $index }}].tickets">
 
-                <div class="task well" ng-repeat="item in column.items">
+                <div class="task well" ng-repeat="item in column.tickets">
                   <span>{{ item.name }}</span>
                   <hr class="dotted">
                   <span>Resp 1</span>
@@ -111,7 +111,7 @@
         </tbody>
       </table>
 
-      {{ board.columns|json}}
+      {{ board|json}}
       {% endverbatim %}
 
       <footer>
@@ -137,17 +137,20 @@
           }
         });
 
-        this.taskboard = angular.module('taskboard', ['ui', 'djangoRESTResources']);
+        this.taskboard = angular.module('taskboard', ['ui', 'djangoRESTResources']).config(function($httpProvider) {
+    $httpProvider.defaults.headers.common['X-CSRFToken']='{{ csrf_token }}';
+});
 
         this.TaskController = function($scope, djResource) {
-          var tickets = djResource('/kanban/tickets/:ticketId/', {ticketId:'@id'});
+          var project = djResource('/kanban/projects/:projectId/', {projectId:'@id'});
 
+          /*
           $scope.board = {
             columns: [
               {% for column in columns %}
                 {
                   name: '{{ column }}',
-                  items: [
+                  tickets: [
                     {% for ticket in column.tickets.all %}
                       {
                         id: {{ticket.id}},
@@ -159,10 +162,16 @@
               {% endfor %}
             ]
           };
+          */
+
+          $scope.board = project.get({projectId:1});
 
           var demo = function(newValue, oldValue, scope) {
-            console.log('demo');
-            console.log(oldValue, newValue);
+            // console.log(oldValue, newValue);
+            // console.log($scope.board);
+            if ($scope.board != {}) {
+              project.update({projectId:1}, $scope.board);
+            }
           }
 
           $scope.$watch('board', demo, true);

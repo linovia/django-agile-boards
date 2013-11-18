@@ -1,16 +1,27 @@
 
 from rest_framework import serializers
 
-from .models import Ticket, Column
+from . import models
 
 
-class TicketSerializer(serializers.HyperlinkedModelSerializer):
+class Ticket(serializers.ModelSerializer):
     class Meta:
-        model = Ticket
+        model = models.Ticket
         fields = ('id', 'name', 'progress', 'order', 'status')
 
 
-class ColumnSerializer(serializers.HyperlinkedModelSerializer):
+class Column(serializers.ModelSerializer):
+    tickets = Ticket(many=True, allow_add_remove=True)
+
     class Meta:
-        model = Column
-        fields = ('id', 'name', 'order')
+        model = models.Column
+        fields = ('id', 'name', 'order', 'tickets')
+
+
+class Project(serializers.ModelSerializer):
+	columns = Column(many=True, allow_add_remove=True)
+
+	class Meta:
+		model = models.Project
+		fields = ('id', 'name', 'columns')
+
