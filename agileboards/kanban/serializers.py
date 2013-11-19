@@ -7,7 +7,7 @@ from . import models
 class Ticket(serializers.ModelSerializer):
     class Meta:
         model = models.Ticket
-        fields = ('id', 'name', 'progress', 'order', 'status')
+        fields = ('id', 'name', 'progress')
 
 
 class Column(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class Column(serializers.ModelSerializer):
 
     class Meta:
         model = models.Column
-        fields = ('id', 'name', 'order', 'tickets')
+        fields = ('id', 'name', 'tickets')
 
 
 class Project(serializers.ModelSerializer):
