@@ -1,8 +1,9 @@
 
 from django.views import generic
+from django.http import HttpResponseRedirect
 from rest_framework import viewsets
 
-from . import models, serializers
+from . import models, serializers, forms
 
 
 #
@@ -31,14 +32,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class Project(generic.DetailView):
     model = models.Project
     template_name = "board.html"
-    pk_url_kwarg = 'project_id'
-
-    def get_context_data(self, **kwargs):
-        context = super(Project, self).get_context_data(**kwargs)
-        context['columns'] = models.Column.objects.filter(project=self.object)
-        return context
+    pk_url_kwarg = "project_id"
 
 
 class ColumnCreation(generic.CreateView):
     model = models.Column
-    template_name = "column/edit.html"
+    template_name = "columns/edit.html"
+    form_class = forms.Column
+
+    def form_valid(self, form):
+        column = form.save(commit=False)
+        column.project_id = self.kwargs['project_id']
+        column.save()
+        return HttpResponseRedirect(self.get_success_url())
