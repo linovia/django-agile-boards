@@ -333,8 +333,6 @@ angular.module('djangoRESTResources', ['ng']).
           promise = $http(httpConfig);
           value.$resolved = false;
 
-          console.log('1>', value);
-
           promise.then(markResolved, markResolved);
           value.$then = promise.then(function(response) {
             // Success wrapper
@@ -390,13 +388,10 @@ angular.module('djangoRESTResources', ['ng']).
               (success||noop)(value, response.headers);
             }
 
-            console.log(value, response);
-
             response.resource = value;
             return response;
           }, error).then;
 
-          console.log('2>', value);
           return value;
         };
 
