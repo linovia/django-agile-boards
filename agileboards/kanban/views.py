@@ -1,5 +1,5 @@
 
-from django.views.generic import DetailView
+from django.views import generic
 from rest_framework import viewsets
 
 from . import models, serializers
@@ -22,12 +22,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
 # REGULAR VIEWS
 #
 
-class ProjectView(DetailView):
+class Project(generic.DetailView):
     model = models.Project
     template_name = "board.html"
     pk_url_kwarg = 'project_id'
 
     def get_context_data(self, **kwargs):
-        context = super(ProjectView, self).get_context_data(**kwargs)
+        context = super(Project, self).get_context_data(**kwargs)
         context['columns'] = models.Column.objects.filter(project=self.object)
         return context
+
+
+class ColumnCreation(generic.CreateView):
+    model = models.Column
+    template_name = "column/edit.html"

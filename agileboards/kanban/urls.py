@@ -8,6 +8,14 @@ router.register(r'projects', views.ProjectViewSet)
 
 urlpatterns = patterns('',
 
+    url(r'^(?P<project_id>\d+)/$',
+        views.Project.as_view(),
+        name="homepage"),
+
+    url(r'^(?P<project_id>\d+)/columns/new/$',
+        views.ColumnCreation.as_view(),
+        name="new-column"),
+
     url(r'^',
         include(router.urls)),
 
