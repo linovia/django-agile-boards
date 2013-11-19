@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 
     # 3rd parties
     'rest_framework',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (
