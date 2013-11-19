@@ -17,6 +17,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.Project
     paginate_by = None
 
+    def pre_save(self, project):
+        for i, column in enumerate(project._related_data['columns']):
+            column.order = i
+            for j, ticket in enumerate(column._related_data['tickets']):
+                ticket.order = j
+
 
 #
 # REGULAR VIEWS
