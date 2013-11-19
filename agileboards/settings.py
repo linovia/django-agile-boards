@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     # 3rd parties
     'rest_framework',
     'south',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -95,3 +96,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGINATE_BY': 10
 }
+
+# CRISPY FORMS
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
