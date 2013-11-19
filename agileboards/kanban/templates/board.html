@@ -1,91 +1,11 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en" ng-app="taskboard">
-  <head>
-    <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+{% block ng-app %}ng-app="taskboard"{% endblock %}
 
-    <!-- Le styles -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      
-      .show-grid [class*="span"] {
-        background-color: #eee;
-        text-align: center;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-        min-height: 40px;
-        line-height: 40px;
-      }
-    </style>
-    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+{% block ng-controller %}ng-controller="TaskController"{% endblock %}
 
-    <link href="{% static 'css/kanban.css' %}" rel="stylesheet">
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="{% static 'js/html5shiv.js' %}"></script>
-    <![endif]-->
-
-    <!-- Fav and touch icons
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'ico/apple-touch-icon-144-precomposed.png' %}">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'ico/apple-touch-icon-114-precomposed.png' %}">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'ico/apple-touch-icon-72-precomposed.png' %}">
-                    <link rel="apple-touch-icon-precomposed" href="{% static 'ico/apple-touch-icon-57-precomposed.png' %}">
-                                   <link rel="shortcut icon" href="{% static 'ico/favicon.png' %}">
-    -->
-  </head>
-
-  <body ng-controller="TaskController">
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Project name</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li class="nav-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-            </ul>
-            <form class="navbar-form pull-right">
-              <input class="span2" type="text" placeholder="Email">
-              <input class="span2" type="password" placeholder="Password">
-              <button type="submit" class="btn">Sign in</button>
-            </form>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-
+{% block content %}
       {% verbatim %}
       <table class="table table-bordered">
         <thead>
@@ -114,15 +34,16 @@
       {{ board|json}}
       {% endverbatim %}
 
-      <footer>
-        <p>&copy; Linovia 2013 - {% now "Y" %}</p>
-      </footer>
+      <div class="row">
+        <div span="span12">
+          <a href="{% url "new-column" project.id %}" class="btn">Add a column</a>
+        </div>
+      </div>
 
-    </div> <!-- /container -->
+{% endblock %}
 
-    <script src="{% static 'js/jquery-1.10.1.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui-1.10.3.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
+
+{% block extra-js %}
     <script src="{% static 'js/angular-1.0.7.js' %}"></script>
     <script src="{% static 'js/angularui-0.4.0.js' %}"></script>
     <script src="{% static 'js/multiSortable-0.0.2.js' %}"></script>
@@ -144,17 +65,21 @@
         this.TaskController = function($scope, djResource) {
           var project = djResource('/kanban/projects/:projectId/', {projectId:'@id'});
 
-          /*
+          {% comment %}
           $scope.board = {
+            id: {{ project.id }},
+            name: '{{ project.name }}',
             columns: [
-              {% for column in columns %}
+              {% for column in project.columns.all %}
                 {
-                  name: '{{ column }}',
+                  id: {{ column.id }},
+                  name: '{{ column.name }}',
                   tickets: [
                     {% for ticket in column.tickets.all %}
                       {
                         id: {{ticket.id}},
-                        name: '{{ ticket.name }}'
+                        name: '{{ ticket.name }}',
+                        progress: {{ ticket.progress }}
                       },
                     {% endfor %}
                 ]
@@ -162,24 +87,19 @@
               {% endfor %}
             ]
           };
-          */
-
-          $scope.board = project.get({projectId:1});
+          {% endcomment %}
 
           var demo = function(newValue, oldValue, scope) {
-            // console.log(oldValue, newValue);
-            // console.log($scope.board);
             if ($scope.board != {}) {
-              project.update({projectId:1}, $scope.board);
+              project.update({projectId:{{ project.id }}}, $scope.board);
             }
           }
 
-          $scope.$watch('board', demo, true);
+          $scope.board = project.get({projectId:1});
 
+          $scope.$watch('board', demo, true);
         };
 
       }).call(this);
     </script>
-
-  </body>
-</html>
+{% endblock %}
