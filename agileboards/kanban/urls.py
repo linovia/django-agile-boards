@@ -1,3 +1,10 @@
+"""
+agileboards.kanban.urls
+~~~~~~~~~~~~~~~~~~~~~~
+
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
+"""
 
 from django.conf.urls import patterns, url, include
 from rest_framework import routers

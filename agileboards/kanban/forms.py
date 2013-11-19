@@ -1,3 +1,10 @@
+"""
+agileboards.kanban.forms
+~~~~~~~~~~~~~~~~~~~~~~~
+
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
+"""
 
 from django import forms
 from crispy_forms.helper import FormHelper
