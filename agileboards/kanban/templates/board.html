@@ -20,9 +20,11 @@
                 <div class="task well" ng-repeat="item in column.tickets">
                   <span>{{ item.name }}</span>
                   <hr class="dotted">
-                  <span>Resp 1</span>
+                  <span>Mr X</span>
                   <div class="progress">
-                    <div class="bar" style="width: {{ item.progress }}%;"></div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ item.progress }}%;">
+                      <span class="sr-only">{{ item.progress }}% Complete</span>
+                    </div>
                   </div>
                 </div>
 
