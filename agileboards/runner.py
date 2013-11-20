@@ -11,8 +11,7 @@ from logan.runner import run_app, configure_app
 
 import base64
 import os
-import pkg_resources
-import warnings
+
 
 KEY_LENGTH = 40
 
@@ -139,6 +138,7 @@ def main():
         settings_envvar='AGILEBOARDS_CONF',
         initializer=initialize_app,
     )
+
 
 if __name__ == '__main__':
     main()
