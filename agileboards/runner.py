@@ -35,50 +35,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
 
         'NAME': os.path.join(CONF_ROOT, 'agileboards.db'),
-        'USER': 'postgres',
+        'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
 }
-
-################
-## Web Server ##
-################
-
-# You MUST configure the absolute URI root for Agileboards:
-AGILEBOARDS_URL_PREFIX = 'http://kanban.example.com'  # No trailing slash!
-
-# If you're using a reverse proxy, you should enable the X-Forwarded-Proto
-# and X-Forwarded-Host headers, and uncomment the following settings
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# USE_X_FORWARDED_HOST = True
-
-AGILEBOARDS_WEB_HOST = '0.0.0.0'
-AGILEBOARDS_WEB_PORT = 9000
-AGILEBOARDS_WEB_OPTIONS = {
-    'workers': 3,  # the number of gunicorn workers
-    'limit_request_line': 0,  # required for raven-js
-    'secure_scheme_headers': {'X-FORWARDED-PROTO': 'https'},
-}
-
-#################
-## Mail Server ##
-#################
-
-# For more information check Django's documentation:
-#  https://docs.djangoproject.com/en/1.3/topics/email/?from=olddocs#e-mail-backends
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-EMAIL_HOST = 'localhost'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST_USER = ''
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
-
-# The email address to send on behalf of
-SERVER_EMAIL = 'root@localhost'
 
 ###########
 ## etc. ##
