@@ -42,6 +42,18 @@ DATABASES = {
     }
 }
 
+################
+## Web Server ##
+################
+
+# You MUST configure the absolute URI root for Agileboards:
+AGILEBOARDS_URL_PREFIX = 'http://kanban.example.com'  # No trailing slash!
+
+# If you're using a reverse proxy, you should enable the X-Forwarded-Proto
+# and X-Forwarded-Host headers, and uncomment the following settings
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# USE_X_FORWARDED_HOST = True
+
 ###########
 ## etc. ##
 ###########
