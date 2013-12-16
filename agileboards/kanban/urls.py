@@ -23,7 +23,7 @@ urlpatterns = patterns('',
         views.ColumnCreation.as_view(),
         name="new-column"),
 
-    url(r'^',
+    url(r'^api/',
         include(router.urls)),
 
     url(r'^api-auth/',

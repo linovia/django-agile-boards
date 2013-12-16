@@ -61,35 +61,11 @@
         });
 
         this.taskboard = angular.module('taskboard', ['ui', 'djangoRESTResources']).config(function($httpProvider) {
-    $httpProvider.defaults.headers.common['X-CSRFToken']='{{ csrf_token }}';
-});
+            $httpProvider.defaults.headers.common['X-CSRFToken']='{{ csrf_token }}';
+        });
 
         this.TaskController = function($scope, djResource) {
-          var project = djResource('/kanban/projects/:projectId/', {projectId:'@id'});
-
-          {% comment %}
-          $scope.board = {
-            id: {{ project.id }},
-            name: '{{ project.name }}',
-            columns: [
-              {% for column in project.columns.all %}
-                {
-                  id: {{ column.id }},
-                  name: '{{ column.name }}',
-                  tickets: [
-                    {% for ticket in column.tickets.all %}
-                      {
-                        id: {{ticket.id}},
-                        name: '{{ ticket.name }}',
-                        progress: {{ ticket.progress }}
-                      },
-                    {% endfor %}
-                ]
-                },
-              {% endfor %}
-            ]
-          };
-          {% endcomment %}
+          var project = djResource('/kanban/api/projects/:projectId/', {projectId:'@id'});
 
           var demo = function(newValue, oldValue, scope) {
             if ($scope.board != {}) {
@@ -105,3 +81,28 @@
       }).call(this);
     </script>
 {% endblock %}
+
+
+{% comment %}
+$scope.board = {
+  id: {{ project.id }},
+  name: '{{ project.name }}',
+  columns: [
+    {% for column in project.columns.all %}
+      {
+        id: {{ column.id }},
+        name: '{{ column.name }}',
+        tickets: [
+          {% for ticket in column.tickets.all %}
+            {
+              id: {{ticket.id}},
+              name: '{{ ticket.name }}',
+              progress: {{ ticket.progress }}
+            },
+          {% endfor %}
+      ]
+      },
+    {% endfor %}
+  ]
+};
+{% endcomment %}
