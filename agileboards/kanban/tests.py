@@ -1,3 +1,9 @@
-from django.test import TestCase
+"""
+agileboards.kanban.tests
+~~~~~~~~~~~~~~~~~~~~~~~
 
-# Create your tests here.
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
+"""
+
+from django.test import TestCase

@@ -1,10 +1,9 @@
 """
-WSGI config for agileboards project.
+agileboards.wsgi
+~~~~~~~~~~~~~~~~
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
 """
 
 import os

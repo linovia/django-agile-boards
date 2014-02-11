@@ -1,37 +1,54 @@
+"""
+agileboards.kanban.views
+~~~~~~~~~~~~~~~~~~~~~~~
 
-from itertools import groupby
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
+"""
 
-from django.views.generic import DetailView
-
+from django.views import generic
+from django.http import HttpResponseRedirect
 from rest_framework import viewsets
 
-from .serializers import TicketSerializer
-from .models import Ticket, Column, Project
+from . import models, serializers, forms
 
 
 #
 # REST API VIEWS
 #
 
-class TicketViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows tickets to be viewed or edited.
     """
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.Project
     paginate_by = None
+
+    def pre_save(self, project):
+        for i, column in enumerate(project._related_data['columns']):
+            column.order = i
+            for j, ticket in enumerate(column._related_data['tickets']):
+                ticket.order = j
 
 
 #
 # REGULAR VIEWS
 #
 
-class ProjectView(DetailView):
-    model = Project
+class Project(generic.DetailView):
+    model = models.Project
     template_name = "board.html"
-    pk_url_kwarg = 'project_id'
+    pk_url_kwarg = "project_id"
 
-    def get_context_data(self, **kwargs):
-        context = super(ProjectView, self).get_context_data(**kwargs)
-        context['columns'] = Column.objects.filter(project=self.object)
-        return context
+
+class ColumnCreation(generic.CreateView):
+    model = models.Column
+    template_name = "columns/edit.html"
+    form_class = forms.Column
+
+    def form_valid(self, form):
+        column = form.save(commit=False)
+        column.project_id = self.kwargs['project_id']
+        column.save()
+        return HttpResponseRedirect(self.get_success_url())

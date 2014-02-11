@@ -1,16 +1,34 @@
+"""
+agileboards.kanban.serializers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:copyright: (c) 2013-2014 by Linovia, see AUTHORS for more details.
+:license: BSD, see LICENSE for more details.
+"""
 
 from rest_framework import serializers
 
-from .models import Ticket, Column
+from . import models
 
 
-class TicketSerializer(serializers.HyperlinkedModelSerializer):
+class Ticket(serializers.ModelSerializer):
     class Meta:
-        model = Ticket
-        fields = ('id', 'name', 'progress', 'order', 'status')
+        model = models.Ticket
+        fields = ('id', 'name', 'progress')
 
 
-class ColumnSerializer(serializers.HyperlinkedModelSerializer):
+class Column(serializers.ModelSerializer):
+    tickets = Ticket(many=True, allow_add_remove=True)
+
     class Meta:
-        model = Column
-        fields = ('id', 'name', 'order')
+        model = models.Column
+        fields = ('id', 'name', 'tickets')
+
+
+class Project(serializers.ModelSerializer):
+	columns = Column(many=True, allow_add_remove=True)
+
+	class Meta:
+		model = models.Project
+		fields = ('id', 'name', 'columns')
+
