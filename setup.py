@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='django-agile-boards',
-    version='0.1.0',
+    version='0.1.1',
     author='Xavier Ordoquy',
     author_email='xordoquy@linovia.com',
     url='https://www.linovia.com',
