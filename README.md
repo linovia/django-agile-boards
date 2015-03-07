@@ -6,7 +6,7 @@ Django.
 
 In order to get started, you need to install the project:
 
-    $ pip install -e https://github.com/linovia/django-agile-boards.git
+    $ pip install git+https://github.com/linovia/django-agile-boards.git
 
 You can then bootstrap the installation process by generating a sample
 configuration file:
